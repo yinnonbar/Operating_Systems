@@ -1,0 +1,10 @@
+Eyal Vilensky, Yinnon Bratspiess
+A user-level threads scedhuler implementing an expansion of Round-Robin scheduling algorithm. 
+
+FILES:
+uthreads.cpp - a file with the code that implementing the uthreads.h functions which implements
+				a combined policy of R&R and PR for thread scheduling.
+				some actions.
+uthreads.h - the header file you've provided
+Makefile - the makefile
+README - This file.

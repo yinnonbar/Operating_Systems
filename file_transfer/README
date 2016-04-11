@@ -1,0 +1,54 @@
+an implementation of reliable file transfer between a client and a server.
+The protocol should use TCP to transmit the file from a client to the server.
+Eyal Vilensky , Yinnon Bratspiess
+
+FILES:
+	srftp.cpp - the server file.
+	clftp.cpp - the client file.
+	Makefile - the makefile.
+	README - This file.
+	performance.jpg - A graph showing the time it takes to send a file.
+
+Implementation:
+	In this ex we're implementing a TCP protocol for sending files between two computers. The client
+	is the sender and the server is the receiver. First of all we send the file's size to check if 
+	it's valid and stand in the server's max file it can get. if it does then we send the file's
+	name and the name we want to save it in the server and then we send  the file. When the file was
+	sent we close the client's socket in the server.  
+	
+Implementing using UDP connection :
+	We will use the message numbering scheme which will give the receiver the conformation that the 
+	message was sent and also reference to the message number so the sender will know which message 
+	was sent.
+	First thing we will do when connected as client is to sent the number of packets. 
+	The cilent will wait till it's get a ack from the server and if a ack was not received it will 
+	send it again.
+	Those are the steps for sending and receiving each peacket using UDP :
+	client :
+	send the current packet. Check if there is a next packet. If there's no next packet than just 
+	wait till the socket is closed. If there is another request to send the current packet we will 
+	resend it.
+	Server :
+	For each packet we receive the check if the previous packet number  is smaller by one from the 
+	current packet received's number. If it's not then we will send to the client a request to 
+	resend the previous packet. If there's no problem and the number is smaller by one then we
+	will se if the next packet has already received. If it wasn't received yet then we will wait for 
+	it. If a defined time has passed and the server has'nt received a packet than we will ask for a 
+	resend of a packet.
+	In the moment that we see that all of the packets that had to be sent
+	are received we will close the socket.
+	There are some problems using UDP : 
+	first of all it's possible that the server will receive the file not in the required order, 
+	Therefore we will check for each packet that the previous packet was received already.
+	Another problem we deal with is a packet that wasn't received well or wasn't received. If a 
+	packet wasn't received we send a message to the client to resend it.
+	Efficiency :
+	In this implementation the client only sending packets that were not received by the server 
+	while the server will only request from the client if it didn't receive a packet from the 
+	client.	
+	Differences :
+	In our implementation we send the file's size but in this UDP suggestion we send the number of 
+	packets and verify in the end that all the number of packets that had to be sent was really 
+	sent.		
+	Another difference is that in the suggestion the server is tracking all the packets and see if 
+	any wasn't received, and in that case it sends a resend request for that packet.
